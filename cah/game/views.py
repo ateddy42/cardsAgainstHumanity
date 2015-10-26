@@ -36,28 +36,17 @@ def play(request):
         handID = request.GET["h"]
         hand = Hands.objects.get(id=handID)
         if hand.numPlayed >= NUM_CARDS_PER_ROUND:
-            return HttpResponse("Hand already has enough user responses.")
+            return HttpResponseRedirect("/play/") # already enough responses for this hand
         p = Played(playerID = request.user.id, handID = handID, wID = request.GET["w"])
         p.save()
         hand.numPlayed += 1
         hand.save()
         return HttpResponseRedirect("/play/")
     played = Played.objects.filter(playerID = request.user.id).values_list('handID', flat=True)
-    allHands = Hands.objects.exclude(id__in = played)
-    hand = None
-    hand2 = allHands.filter(numPlayed = 2)
-    if len(hand2) > 0:
-        hand = hand2.order_by('?').first()
-    else:
-        hand1 = allHands.filter(numPlayed = 1)
-        if len(hand1) > 0:
-            hand = hand1.order_by('?').first()
-        else:
-            hand0 = allHands.filter(numPlayed = 0)
-            if len(hand0) > 0:
-                hand = hand0.order_by('?').first()
-    if hand is None:
+    allHands = Hands.objects.exclude(id__in = played).exclude(numPlayed = NUM_CARDS_PER_ROUND)
+    if len(allHands) == 0:
         return HttpResponse("No hands to choose from. <a href='/genHands/'>Generate hands.</a>")
+    hand = allHands.order_by('-numPlayed').first()
     black = BlackCards.objects.filter(id=hand.bid)
     whiteIDs = HandWhites.objects.filter(handID = hand.id).values_list('wID', flat=True)
     whites = WhiteCards.objects.filter(id__in = whiteIDs).order_by('?')
