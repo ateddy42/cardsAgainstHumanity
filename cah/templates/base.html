@@ -1,0 +1,30 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Machines Against Cards Against Humanity</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}game/css/foundation.css" />
+    <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}game/img/favicon.ico"/>
+    <script src="{{ STATIC_URL }}game/js/vendor/modernizr.js"></script>
+    <style>
+      .blackcard {
+        background-color: #000;
+        color: #FFF;
+      }
+      .whitecard {
+        width: 100%;
+        text-align: left;
+      }
+    </style>
+    {% block header %}{% endblock %}
+  </head>
+  <body>
+    {% block body %}{% endblock %}
+    <script src="{{ STATIC_URL }}cah/js/vendor/jquery.js"></script>
+    <script src="{{ STATIC_URL }}cah/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>

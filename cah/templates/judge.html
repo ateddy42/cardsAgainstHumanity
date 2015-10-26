@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% for b in black %}
+<div class="row">
+  <div class="medium-12 columns">
+    <div class="panel blackcard">
+      {{b.text}}
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% for w in whites %}
+<div class="row">
+  <div class="medium-12 columns">
+    <a href="?h={{handID}}&w={{w.id}}">
+      <div class="panel whitecard">
+      {{w.text}}
+      </div>
+    </a>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

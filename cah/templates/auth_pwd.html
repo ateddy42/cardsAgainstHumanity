@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block header %}
+<script>
+function checkNew() {
+    var x = document.forms["change_pwd"]["new"].value;
+    if (x.length == 0)
+		document.getElementById("new").innerHTML = "";
+	else if (x.length >= 4) {
+        document.getElementById("new").innerHTML = "&#10004;";
+		document.getElementById("new").style.color = "#090";
+	} else {
+		document.getElementById("new").innerHTML = "&#10008;";
+		document.getElementById("new").style.color = "#C00";
+	}
+}
+function checkNewConf() {
+    var x = document.forms["change_pwd"]["confirm"].value;
+    var y = document.forms["change_pwd"]["new"].value;
+    if (x.length == 0)
+		document.getElementById("confirm").innerHTML = "";
+	else if (x == y) {
+        document.getElementById("confirm").innerHTML = "&#10004;";
+		document.getElementById("confirm").style.color = "#090";
+	} else {
+		document.getElementById("confirm").innerHTML = "&#10008;";
+		document.getElementById("confirm").style.color = "#C00";
+	}
+}
+</script>
+{% endblock %}
+
+{% block body %}
+{% if error %}
+<div data-alert class="alert-box alert radius">
+  {{ error }}
+  <a href="#" class="close">&times;</a>
+</div>
+{% endif %}
+{% if success %}
+<div data-alert class="alert-box success radius">
+  Password successfully changed!
+  <a href="#" class="close">&times;</a>
+</div>
+{% endif %}
+<div class="row">
+<div class="medium-10 large-7 columns">
+<form name="change_pwd" style="text-align:right" action='/accounts/pwd/' method='post'>{% csrf_token %}
+
+<div class="row">
+<div class="medium-11 columns">
+  	<div class="row collapse prefix-radius">
+        <div class="medium-4 columns">
+          <span class="prefix">Old Password</span>
+        </div>
+        <div class="medium-7 columns">
+          <input type="password" name="old" placeholder="*******">
+        </div>
+        <div class="small-1 columns"></div>
+	</div>
+    </div>
+</div>
+
+<div class="row">
+<div class="medium-11 columns">
+	<div class="row collapse prefix-radius">
+        <div class="medium-4 columns">
+          <span class="prefix">New Password</span>
+        </div>
+        <div class="medium-7 columns">
+          <input type="password" onKeyUp="checkNew()" name="new" placeholder="*******">
+        </div>
+        <div class="small-1 columns hide-for-small"><span id="new"></span></div>
+    </div>
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="medium-11 columns">
+  	<div class="row collapse prefix-radius">
+        <div class="medium-4 columns">
+          <span class="prefix">Confirm New</span>
+        </div>
+        <div class="medium-7 columns">
+          <input type="password" onKeyUp="checkNewConf()" name="confirm" placeholder="*******">
+        </div>
+        <div class="small-1 columns hide-for-small"><span id="confirm"></span></div>
+	</div>
+</div>
+</div>
+<input type="hidden" name="s" value="s">
+<input align="right" style="margin-right:15%" class="button small" type="submit" value="Change Password" />
+</form>
+</div>
+</div>
+{% endblock %}

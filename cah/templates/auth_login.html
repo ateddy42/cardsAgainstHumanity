@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% if error %}
+<div data-alert class="alert-box alert radius">
+  {{ error }}
+  <a href="#" class="close">&times;</a>
+</div>
+{% endif %}
+<div class="row">
+<div class="medium-9 large-6 columns">
+<form style="text-align:right" action='/accounts/login/' method='post'>{% csrf_token %}
+<div class="row">
+<div class="medium-12 columns">
+  	<div class="row collapse prefix-radius">
+        <div class="medium-3 columns">
+          <span class="prefix">Username</span>
+        </div>
+        <div class="medium-9 columns">
+          <input type="text" name="username" placeholder="username">
+        </div>
+	</div>
+    </div>
+</div>
+<div class="row">
+<div class="medium-12 columns">
+	<div class="row collapse prefix-radius">
+        <div class="medium-3 columns">
+          <span class="prefix">Password</span>
+        </div>
+        <div class="medium-9 columns">
+          <input type="password" name="password" placeholder="*******">
+        </div>
+    </div>
+    </div>
+</div>
+    <input type="hidden" name="s" value="s" />
+    <input type="hidden" name="next" value="{{ next }}" />
+    <input align="right" class="button small" type="submit" value="Login" />
+</form>
+</div>
+</div>
+{% endblock %}
