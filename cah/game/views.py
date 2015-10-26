@@ -43,14 +43,24 @@ def play(request):
         hand.save()
         return HttpResponseRedirect("/play/")
     played = Played.objects.filter(playerID = request.user.id).values_list('handID', flat=True)
-    allHands = Hands.objects.exclude(id__in = played).exclude(numPlayed = NUM_CARDS_PER_ROUND)
-    print played
-    if len(allHands) == 0:
+    allHands = Hands.objects.exclude(id__in = played)
+    hand = None
+    hand2 = allHands.filter(numPlayed = 2)
+    if len(hand2) > 0:
+        hand = hand2.order_by('?').first()
+    else:
+        hand1 = allHands.filter(numPlayed = 1)
+        if len(hand1) > 0:
+            hand = hand1.order_by('?').first()
+        else:
+            hand0 = allHands.filter(numPlayed = 0)
+            if len(hand0) > 0:
+                hand = hand0.order_by('?').first()
+    if hand is None:
         return HttpResponse("No hands to choose from. <a href='/genHands/'>Generate hands.</a>")
-    hand = allHands.order_by('-numPlayed').first()
     black = BlackCards.objects.filter(id=hand.bid)
     whiteIDs = HandWhites.objects.filter(handID = hand.id).values_list('wID', flat=True)
-    whites = WhiteCards.objects.filter(id__in = whiteIDs)
+    whites = WhiteCards.objects.filter(id__in = whiteIDs).order_by('?')
     return render(request, "play.html", {"handID":hand.id, "black":black, "whites":whites})
 
 @login_required
