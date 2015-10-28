@@ -1,16 +1,33 @@
 {% extends "base.html" %}
 
+{% block header %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Name', 'Cards Played'],
+      {% for l in leaders %}
+      ['{{l.username}}', {{l.count}}],
+      {% endfor %}
+    ]);
+
+    var options = {
+      title: 'Top players by number of cards played'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+  }
+</script>
+{% endblock %}
 {% block body %}
 <div class="row">
   <div class="medium-12 columns">
-    <h5>Top players by number of cards played</h5>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
   </div>
 </div>
-{% for l in leaders %}
-<div class="row">
-  <div class="medium-12 columns">
-      {{forloop.counter}}) {{l.username}} - {{l.count}}
-  </div>
-</div>
-{% endfor %}
 {% endblock %}
