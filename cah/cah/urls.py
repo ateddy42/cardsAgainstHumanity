@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^$', 'game.views.home'),
     url(r'^judge/$', 'game.views.judge'),
     url(r'^play/$', 'game.views.play'),
+    url(r'^leaders/$', 'game.views.leaders'),
     url(r'^genHands/$', 'game.views.genHands'),
     url(r'^addCards/$', 'game.views.addCards'),
 )

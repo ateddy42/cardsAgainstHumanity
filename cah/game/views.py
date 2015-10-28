@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from game.models import *
@@ -56,6 +57,19 @@ def play(request):
     whiteIDs = HandWhites.objects.filter(handID = hand.id).values_list('wID', flat=True)
     whites = WhiteCards.objects.filter(id__in = whiteIDs).order_by('?')
     return render(request, "play.html", {"handID":hand.id, "black":black, "whites":whites})
+
+@login_required
+def leaders(request):
+    can_judge = request.user.groups.filter(name='Judge')
+    if not can_judge:
+        return HttpResponse("You are not authorized to view this page.")
+    leaders = User.objects.raw("""SELECT p.playerID, a.id, a.username, COUNT( p.handID ) AS count
+                            FROM  `game_played` p,  `auth_user` a
+                            WHERE p.playerID = a.id
+                            GROUP BY p.playerID
+                            ORDER BY count DESC""")
+    return render(request, "leaders.html", {"leaders":leaders})
+
 
 @login_required
 def addCards(request):

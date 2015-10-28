@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="row">
+  <div class="medium-12 columns">
+    <h5>Top players by number of cards played</h5>
+  </div>
+</div>
+{% for l in leaders %}
+<div class="row">
+  <div class="medium-12 columns">
+      {{forloop.counter}}) {{l.username}} - {{l.count}}
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
