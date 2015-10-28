@@ -54,9 +54,9 @@ def pwd(request):
     user = auth.authenticate(username=request.user.username, password=new)
     auth.login(request, user)
     if request.user.has_usable_password():
-        return render(request, 'auth_pwd.html', {"success":True})
+        return HttpResponseRedirect('/?p')
     else:
-        return render(request, 'auth_pwd.html', {"error":"FUCCCCCKKKK"})
+        return render(request, 'auth_pwd.html', {"pwd":"FUCCCCCKKKK"})
 
 def error(request):
     raise Http404

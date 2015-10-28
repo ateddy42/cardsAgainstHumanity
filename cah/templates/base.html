@@ -22,9 +22,11 @@
   <body>
     {% block body %}{% endblock %}
     <script src="{{ STATIC_URL }}cah/js/vendor/jquery.js"></script>
-    <script src="{{ STATIC_URL }}cah/js/foundation.min.js"></script>
+    <script src="{{ STATIC_URL }}cah/js/foundation/foundation.min.js"></script>
+    <script src="{{ STATIC_URL }}cah/js/foundation/foundation.alert.js"></script>
     <script>
       $(document).foundation();
+      $(document).foundationAlerts();
     </script>
   </body>
 </html>

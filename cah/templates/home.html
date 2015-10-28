@@ -2,8 +2,14 @@
 {% block body %}
 <div class="row">
   <div class="small-12 columns small-centered">
+    {% if pwd %}
+    <div data-alert class="alert-box success radius">
+      Password successfully changed!
+      <a href="#" class="close">&times;</a>
+    </div>
+    {% endif %}
     {% if user.is_authenticated %}
-    Welcome, {{ user.get_username }}. <a href="/accounts/logout/?next={{ request.path }}">Logout</a> <br /><br/>
+    Welcome, {{ user.get_username }}. <a href="/accounts/logout/?next={{ request.path }}">Logout</a> &bull; <a href="/accounts/pwd/">Change Password</a> <br /><br/>
     {% if can_judge %}<a href="/judge/" class="button alert">Judge</a>{% endif %}<a href="/play/" class="button success">Play</a>
     {% else %}
     Please <a href="/accounts/login/">log in</a>.

@@ -8,8 +8,9 @@ import random, csv
 NUM_CARDS_PER_ROUND = 3
 
 def home(request):
+    pwd = "p" in request.GET
     can_judge = request.user.groups.filter(name='Judge')
-    return render(request, 'home.html', {"can_judge":can_judge})
+    return render(request, 'home.html', {"can_judge":can_judge, "pwd":pwd})
 
 @login_required
 def judge(request):
