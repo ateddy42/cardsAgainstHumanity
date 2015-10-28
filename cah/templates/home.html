@@ -4,7 +4,7 @@
   <div class="small-12 columns small-centered">
     {% if user.is_authenticated %}
     Welcome, {{ user.get_username }}. <a href="/accounts/logout/?next={{ request.path }}">Logout</a> <br /><br/>
-    <a href="/judge/" class="button alert">Judge</a><a href="/play/" class="button success">Play</a>
+    {% if can_judge %}<a href="/judge/" class="button alert">Judge</a>{% endif %}<a href="/play/" class="button success">Play</a>
     {% else %}
     Please <a href="/accounts/login/">log in</a>.
     {% endif %}

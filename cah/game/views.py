@@ -8,10 +8,14 @@ import random, csv
 NUM_CARDS_PER_ROUND = 3
 
 def home(request):
-    return render(request, 'home.html', {})
+    can_judge = request.user.groups.filter(name='Judge')
+    return render(request, 'home.html', {"can_judge":can_judge})
 
 @login_required
 def judge(request):
+    can_judge = request.user.groups.filter(name='Judge')
+    if not can_judge:
+        return HttpResponse("You are not authorized to view this page.")
     if len(BlackCards.objects.all()) == 0 or len(WhiteCards.objects.all()) == 0:
         return HttpResponse("Cards missing from database. <a href='/addCards/'>Add cards.</a>")
     if ("w" in request.GET and "h" in request.GET): # card picked
