@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block header %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1.1", {packages:["bar"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      {{graphTitle|safe}},
+      {% for j in graphData %}
+      {{j|safe}},
+      {% endfor %}
+    ]);
+
+    var options = {
+      chart: {
+        title: 'AI Version Performance',
+        subtitle: 'Win percentage of various AI versions compared to individual judges',
+      },
+      bars: 'vertical',
+    };
+
+    var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+    chart.draw(data, options);
+  }
+</script>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="medium-12 columns">
+    <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+  </div>
+</div>
+{% endblock %}

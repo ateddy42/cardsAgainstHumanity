@@ -75,9 +75,16 @@ class Played(models.Model):
     handID = models.IntegerField(default=0)
     wID = models.IntegerField(default=0)
 
+class AIPlayed(models.Model):
+    id = models.AutoField(max_length="10", primary_key=True)
+    AIver = models.IntegerField(default=0)
+    handID = models.IntegerField(default=0)
+    wID = models.IntegerField(default=0)
+
 class Judged(models.Model):
     id = models.AutoField(max_length="10", primary_key=True)
     judgeID = models.IntegerField(default=0)
     handID = models.IntegerField(default=0)
     wID = models.IntegerField(default=0)
     AIver = models.IntegerField(default=0)
+    AIwin = models.BooleanField(default=False)
