@@ -1,27 +1,28 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
+import game.views, cah.views
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
-    # url(r'^$', 'cah.views.home', name='home'),
+    # url(r'^$', cah.views.home', name='home),
     # url(r'^blog/', include('blog.urls')),
 
 
     url(r'^admin/', include(admin.site.urls)),
 
 # cah
-    url(r'^accounts/login/$', 'cah.views.login'),
-    url(r'^accounts/logout/$', 'cah.views.logout'),
-    url(r'^accounts/pwd/$', 'cah.views.pwd'),
-    url(r'^robots.txt$', 'cah.views.robots'),
+    url(r'^accounts/login/$', cah.views.login),
+    url(r'^accounts/logout/$', cah.views.logout),
+    url(r'^accounts/pwd/$', cah.views.pwd),
+    url(r'^robots.txt$', cah.views.robots),
 
 #game
-    url(r'^$', 'game.views.home'),
-    url(r'^judge/$', 'game.views.judge'),
-    url(r'^play/$', 'game.views.play'),
-    url(r'^AIplay/$', 'game.views.AIplay'),
-    url(r'^leaders/$', 'game.views.leaders'),
-    url(r'^graph/$', 'game.views.graph'),
-    url(r'^genHands/$', 'game.views.genHands'),
-    url(r'^addCards/$', 'game.views.addCards'),
-)
+    url(r'^$', game.views.home),
+    url(r'^judge/$', game.views.judge),
+    url(r'^play/$', game.views.play),
+    url(r'^AIplay/$', game.views.AIplay),
+    url(r'^leaders/$', game.views.leaders),
+    url(r'^graph/$', game.views.graph),
+    url(r'^genHands/$', game.views.genHands),
+    url(r'^addCards/$', game.views.addCards),
+]
