@@ -10,7 +10,7 @@
     {% endif %}
     {% if user.is_authenticated %}
     Welcome, {{ user.get_username }}. <a href="/accounts/logout/?next={{ request.path }}">Logout</a> &bull; <a href="/accounts/pwd/">Change Password</a> <br /><br/>
-    {% if can_judge %}<a href="/judge/" class="button alert">Judge</a>{% endif %}<a href="/play/" class="button success">Play</a>
+    {% if can_judge %}<a href="/judge/" class="button alert">Judge</a>{% endif %}<a href="/play/" class="button success">Play</a></br><a href="/leaders/" class="button">Leader Board</a></br><a href="/graph/" class="button">AI Performance Graph</a>
     {% else %}
     Please <a href="/accounts/login/">log in</a>.
     {% endif %}

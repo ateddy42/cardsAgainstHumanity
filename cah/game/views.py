@@ -83,7 +83,7 @@ def play(request):
 @login_required
 def AIplay(request):
     if "v" not in request.GET:
-        return HttpResponse("No version number given")
+        return HttpResponse("No version number given. Add '?v=__' to URL. Version number 0 is random cards.")
     try:
         AIver = int(request.GET["v"])
     except:
@@ -91,11 +91,14 @@ def AIplay(request):
     if len(AIPlayed.objects.filter(AIver = AIver)) > 0:
         return HttpResponse("Cards already played for verison 1")
     allHands = Hands.objects.all()
-    for h in allHands:
-        whites = HandWhites.objects.filter(handID = h.id).values_list('wID', flat=True)
-        p = AIPlayed(AIver = AIver, handID = h.id, wID = random.choice(whites))
-        p.save()
-    return HttpResponse("Random Cards played.")
+    if AIver == 0:
+        for h in allHands:
+            whites = HandWhites.objects.filter(handID = h.id).values_list('wID', flat=True)
+            p = AIPlayed(AIver = AIver, handID = h.id, wID = random.choice(whites))
+            p.save()
+        return HttpResponse("Random Cards played.")
+    else:
+        return HttpResponse("Non-Random cards not programmed yet.")
 
 @login_required
 def leaders(request):
