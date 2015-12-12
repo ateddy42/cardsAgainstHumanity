@@ -22,30 +22,14 @@ SECRET_KEY = '=$$o!@3*(ldf)*vu@rs*v24#-qc8@83)%^6vpd@i8ywun%s6nt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+TEMPLATE_DEBUG = True
+
+
 ALLOWED_HOSTS = ['127.0.0.1']
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["/home2/alphasi4/public_html/cahstatic/templates/", BASE_DIR+"/templates/",],
-        'APP_DIRS': True,
-        'DEBUG': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-            ],
-            'allowed_include_roots': [
-                '/home/alphasi4/public_html/cah/cah',
-            ],
-        },
-    },
-]
+ALLOWED_INCLUDE_ROOTS = ('/home/alphasi4/public_html/cah/cah',)
+
+TEMPLATE_DIRS = ("/home2/alphasi4/public_html/cahstatic/templates/", BASE_DIR+"/templates/",)
 
 # Application definition
 
