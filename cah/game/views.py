@@ -54,7 +54,7 @@ def judge(request):
     except AIPlayed.DoesNotExist:
         return HttpResponse("No cards played for AI Version " + AIver + ".")
     whites = WhiteCards.objects.filter(id__in = whiteIDs).order_by('?')
-    return render(request, "judge.html", {"handID":hand.id, "black":black, "whites":whites, "v":AIver})
+    return render(request, "judge.html", {"handID":hand.id, "black":black, "whites":whites, "v":AIver, "remaining":len(allHands)})
 
 @login_required
 def play(request):
@@ -105,7 +105,7 @@ def leaders(request):
     can_judge = request.user.groups.filter(name='Judge')
     if not can_judge:
         return HttpResponse("You are not authorized to view this page.")
-    leaders = User.objects.raw("""SELECT p.playerID, a.id, a.username, COUNT( p.handID ) AS count
+    leaders = User.objects.raw("""SELECT p.playerID, a.id, a.id as 'username', COUNT( p.handID ) AS count
                             FROM  `game_played` p,  `auth_user` a
                             WHERE p.playerID = a.id
                             GROUP BY p.playerID
