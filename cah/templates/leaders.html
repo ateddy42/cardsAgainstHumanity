@@ -10,7 +10,7 @@
     var data = google.visualization.arrayToDataTable([
       ['Name', 'Cards Played'],
       {% for l in leaders %}
-      ['{{l.username}}', {{l.count}}],
+      ['{{l.playerID}}', {{l.count}}],
       {% endfor %}
     ]);
 

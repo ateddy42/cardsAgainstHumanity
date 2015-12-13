@@ -105,11 +105,10 @@ def leaders(request):
     can_judge = request.user.groups.filter(name='Judge')
     if not can_judge:
         return HttpResponse("You are not authorized to view this page.")
-    leaders = User.objects.raw("""SELECT p.playerID, a.id, a.id as 'username', COUNT( p.handID ) AS count
-                            FROM  `game_played` p,  `auth_user` a
-                            WHERE p.playerID = a.id
-                            GROUP BY p.playerID
-                            ORDER BY count DESC""")
+    leaders = Played.objects.raw("""SELECT id, playerID, COUNT( handID ) AS count
+                                FROM  `game_played` 
+                                GROUP BY playerID
+                                ORDER BY count DESC""")
     return render(request, "leaders.html", {"leaders":leaders})
 
 @login_required
