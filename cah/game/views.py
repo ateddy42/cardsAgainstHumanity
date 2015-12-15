@@ -8,7 +8,6 @@ import random, csv
 from play import playUser
 
 NUM_CARDS_PER_ROUND = 3
-METHOD = 1
 
 def home(request):
     pwd = "p" in request.GET
@@ -106,8 +105,9 @@ def AIplay(request):
                 p.save()
             output += "Cards played for " + u.username + "</br>"
         return HttpResponse(output + "</br>Random Cards played.")
-    else:
-        output = ""
+    elif 0 < AIver <=6:
+        METHOD = (AIver + 1) / 2
+        output = "METHOD: " + str(METHOD) + "</br></br>"
         for u in users:
             if len(Judged.objects.filter(judgeID = u.id)) < AIver * 190:
                 output += "Not enough cards played: " + str(u.username) + "</br>"
@@ -122,6 +122,8 @@ def AIplay(request):
             else:
                 output += "Failure: " + str(u.username) + "</br>"
         return HttpResponse(output + "</br>AI cards played for version " + str(AIver))
+    else:
+        return HttpResponse("Invalid AI Version number. Enter a number between 0 and 6, inclusive.")
 
 @login_required
 def leaders(request):
@@ -148,7 +150,7 @@ def graph(request):
         return HttpResponse("You are not authorized to view this page.")
     judges = Judged.objects.values('judgeID').distinct().values_list('judgeID', flat=True)
 
-    numVersions = 2
+    numVersions = 6
     graphTitle = ['Judge']
     for n in range(numVersions + 1):
         graphTitle += ['Version' + str(n)]
