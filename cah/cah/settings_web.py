@@ -1,8 +1,8 @@
 from settings import *
 
-DEBUG = False
+DEBUG = True
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['.alphasigcornell.org']
 
