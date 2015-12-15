@@ -1,6 +1,5 @@
 import sys, os
 import numpy as np
-from sklearn import preprocessing
 from models import Judged, Hands, HandWhites, AIPlayed
 
 FAKE = False
@@ -14,11 +13,15 @@ NUM_LEARNED = 50
 # 3. Category Ranking
 METHOD = 1
 
+def normalize(v):
+	length = np.sqrt(np.sum(np.multiply(v,v)))
+	return v/length
+
 def learn(method, M, chosen):
     if method == 1:
-        n_chosen = preprocessing.normalize(chosen)
+        n_chosen = normalize(chosen)
         meanCard = np.mean(n_chosen,axis=0,keepdims=True)
-        meanCardNormalized = preprocessing.normalize(meanCard)
+        meanCardNormalized = normalize(meanCard)
         return meanCardNormalized
 
     if method == 2:
