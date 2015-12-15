@@ -106,27 +106,27 @@ def AIplay(request):
                 p.save()
             output += "Cards played for " + u.username + "</br>"
         return HttpResponse(output + "</br>Random Cards played.")
-    # elif 0 < AIver <=6:
-    #     METHOD = (AIver + 1) / 2
-    #     output = "METHOD: " + str(METHOD) + "</br></br>"
-    #     for u in users:
-    #         if len(Judged.objects.filter(judgeID = u.id)) < AIver * 190:
-    #             output += "Not enough cards played: " + str(u.username) + "</br>"
-    #             continue
-    #         if len(AIPlayed.objects.filter(userID = u.id).filter(AIver = AIver)) > 0:
-    #             output += "AI cards already played for version " + str(AIver) + ": " + str(u.username) + "</br>"
-    #             continue
+    elif 0 < AIver <=6:
+        METHOD = (AIver + 1) / 2
+        output = "METHOD: " + str(METHOD) + "</br></br>"
+        for u in users:
+            if len(Judged.objects.filter(judgeID = u.id)) < AIver * 190:
+                output += "Not enough cards played: " + str(u.username) + "</br>"
+                continue
+            if len(AIPlayed.objects.filter(userID = u.id).filter(AIver = AIver)) > 0:
+                output += "AI cards already played for version " + str(AIver) + ": " + str(u.username) + "</br>"
+                continue
 
-    #         #Play cards
-    #         if playUser(request, u.id, AIver, METHOD):
-    #             output += "Success: " + str(u.username) + "</br>"
-    #         else:
-    #             output += "Failure: " + str(u.username) + "</br>"
-    #     return HttpResponse(output + "</br>AI cards played for version " + str(AIver))
-    # else:
-    #     return HttpResponse("Invalid AI Version number. Enter a number between 0 and 6, inclusive.")
+            #Play cards
+            if playUser(request, u.id, AIver, METHOD):
+                output += "Success: " + str(u.username) + "</br>"
+            else:
+                output += "Failure: " + str(u.username) + "</br>"
+        return HttpResponse(output + "</br>AI cards played for version " + str(AIver))
     else:
-        return HttpResponse("Not implemented yet. Run locally and upload.")
+        return HttpResponse("Invalid AI Version number. Enter a number between 0 and 6, inclusive.")
+    # else:
+    #     return HttpResponse("Not implemented yet. Run locally and upload.")
 
 @login_required
 def leaders(request):
