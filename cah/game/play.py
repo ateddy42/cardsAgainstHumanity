@@ -100,6 +100,7 @@ def playUser(request, userID, AIversion, method):
             cardID = np.argmax(scores)
 
         # return cardID
-        p = AIPlayed(AIver = AIversion, handID = h.id, wID = cardID+2, userID = userID)
+        whiteCardID = whiteIDs[cardID] + 2
+        p = AIPlayed(AIver = AIversion, handID = h.id, wID = whiteCardID, userID = userID)
         p.save()
     return True
