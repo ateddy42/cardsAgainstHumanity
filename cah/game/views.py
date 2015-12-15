@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from game.models import *
 import random, csv
+from play import playUser
 
 NUM_CARDS_PER_ROUND = 3
+METHOD = 1
 
 def home(request):
     pwd = "p" in request.GET
@@ -32,7 +34,7 @@ def judge(request):
     AIver = request.GET["v"]
     if ("w" in request.GET and "h" in request.GET): # card picked
         try:
-            AIwin = AIPlayed.objects.get(handID = request.GET["h"], AIver = AIver).wID == int(request.GET["w"])
+            AIwin = AIPlayed.objects.get(handID = request.GET["h"], AIver = AIver, userID = request.user.id).wID == int(request.GET["w"])
         except AIPlayed.DoesNotExist:
             return HttpResponse("Cannot judge. No cards played for AI Version " + AIver + ".")
         p = Judged(judgeID = request.user.id, handID = request.GET["h"],
@@ -49,7 +51,7 @@ def judge(request):
     whiteIDs = []
     whiteIDs.extend(playedWhites)
     try:
-        AICard = AIPlayed.objects.get(handID = hand.id, AIver = AIver)
+        AICard = AIPlayed.objects.get(handID = hand.id, AIver = AIver, userID = request.user.id)
         whiteIDs.append(AICard.wID)
     except AIPlayed.DoesNotExist:
         return HttpResponse("No cards played for AI Version " + AIver + ".")
@@ -80,7 +82,7 @@ def play(request):
     whites = WhiteCards.objects.filter(id__in = whiteIDs).order_by('?')
     return render(request, "play.html", {"handID":hand.id, "black":black, "whites":whites})
 
-@login_required
+# @login_required
 def AIplay(request):
     if "v" not in request.GET:
         return HttpResponse("No version number given. Add '?v=__' to URL. Version number 0 is random cards.")
@@ -88,17 +90,38 @@ def AIplay(request):
         AIver = int(request.GET["v"])
     except:
         return HttpResponse("Not a valid version number: " + request.GET["v"])
-    if len(AIPlayed.objects.filter(AIver = AIver)) > 0:
-        return HttpResponse("Cards already played for verison 1")
+    # if len(AIPlayed.objects.filter(AIver = AIver)) > 0:
+    #     return HttpResponse("Cards already played for version " + str(AIver))
     allHands = Hands.objects.all()
+    users = User.objects.all()
     if AIver == 0:
-        for h in allHands:
-            whites = HandWhites.objects.filter(handID = h.id).values_list('wID', flat=True)
-            p = AIPlayed(AIver = AIver, handID = h.id, wID = random.choice(whites))
-            p.save()
-        return HttpResponse("Random Cards played.")
+        output = ""
+        for u in users:
+            if len(AIPlayed.objects.filter(AIver = AIver).filter(userID = u.id)) > 0:
+                output += "Cards already played for " + u.username + "</br>"
+                continue
+            for h in allHands:
+                whites = HandWhites.objects.filter(handID = h.id).values_list('wID', flat=True)
+                p = AIPlayed(AIver = AIver, handID = h.id, userID = u.id, wID = random.choice(whites))
+                p.save()
+            output += "Cards played for " + u.username + "</br>"
+        return HttpResponse(output + "</br>Random Cards played.")
     else:
-        return HttpResponse("Non-Random cards not programmed yet.")
+        output = ""
+        for u in users:
+            if len(Judged.objects.filter(judgeID = u.id)) < AIver * 190:
+                output += "Not enough cards played: " + str(u.username) + "</br>"
+                continue
+            if len(Judged.objects.filter(judgeID = u.id).filter(AIver = AIver)) > 0:
+                output += "AI cards already played for version " + str(AIver) + ": " + str(u.username) + "</br>"
+                continue
+
+            #Play cards
+            if playUser(request, u.id, AIver, METHOD):
+                output += "Success: " + str(u.username) + "</br>"
+            else:
+                output += "Failure: " + str(u.username) + "</br>"
+        return HttpResponse(output + "</br>AI cards played for version " + str(AIver))
 
 @login_required
 def leaders(request):
@@ -112,56 +135,43 @@ def leaders(request):
     return render(request, "leaders.html", {"leaders":leaders})
 
 @login_required
+def getWinIDs(request):
+    playedWhites = Judged.objects.filter(judgeID = 1).filter(AIver = 0).values_list('wID', flat=True)
+    winWhiteIDs = []
+    winWhiteIDs.extend(playedWhites)
+    return HttpResponse(str(winWhiteIDs))
+
+@login_required
 def graph(request):
     can_judge = request.user.groups.filter(name='Judge')
     if not can_judge:
         return HttpResponse("You are not authorized to view this page.")
     judges = Judged.objects.values('judgeID').distinct().values_list('judgeID', flat=True)
 
-    graphTitle = ['Judge', 'Version 0', 'Version 1', 'Version 2']
+    numVersions = 2
+    graphTitle = ['Judge']
+    for n in range(numVersions + 1):
+        graphTitle += ['Version' + str(n)]
     graphData = []
 
     allJudgeData = ['All Judges']
-    AIver = 0
-    try:
-        allJudgeData += [len(Judged.objects.filter(AIver = AIver, AIwin = 1)) /\
-                float(len(Judged.objects.filter(AIver = AIver)))]
-    except:
-        allJudgeData += [0]
-    AIver = 1
-    try:
-        allJudgeData += [len(Judged.objects.filter(AIver = AIver, AIwin = 1)) /\
-                float(len(Judged.objects.filter(AIver = AIver)))]
-    except:
-        allJudgeData += [0]
-    AIver = 2
-    try:
-        allJudgeData += [len(Judged.objects.filter(AIver = AIver, AIwin = 1)) /\
-                float(len(Judged.objects.filter(AIver = AIver)))]
-    except:
-        allJudgeData += [0]
+    for AIver in range(numVersions + 1): 
+        try:
+            allJudgeData += [len(Judged.objects.filter(AIver = AIver, AIwin = 1)) /\
+                    float(len(Judged.objects.filter(AIver = AIver)))]
+        except:
+            allJudgeData += [0]
     graphData += [allJudgeData]
+
 
     for j in judges:
         judgeData = [str(User.objects.get(id=j).username)]
-        AIver = 0
-        try:
-            judgeData += [len(Judged.objects.filter(AIver = AIver, judgeID = j, AIwin = 1)) /\
-                    float(len(Judged.objects.filter(AIver = AIver, judgeID = j)))]
-        except:
-            judgeData += [0]
-        AIver = 1
-        try:
-            judgeData += [len(Judged.objects.filter(AIver = AIver, judgeID = j, AIwin = 1)) /\
-                    float(len(Judged.objects.filter(AIver = AIver, judgeID = j)))]
-        except:
-            judgeData += [0]
-        AIver = 2
-        try:
-            judgeData += [len(Judged.objects.filter(AIver = AIver, judgeID = j, AIwin = 1)) /\
-                    float(len(Judged.objects.filter(AIver = AIver, judgeID = j)))]
-        except:
-            judgeData += [0]
+        for AIver in range(numVersions + 1):
+            try:
+                judgeData += [len(Judged.objects.filter(AIver = AIver, judgeID = j, AIwin = 1)) /\
+                        float(len(Judged.objects.filter(AIver = AIver, judgeID = j)))]
+            except:
+                judgeData += [0]
         graphData += [judgeData]
     return render(request, "graph.html", {"graphTitle":graphTitle, "graphData":graphData})
 

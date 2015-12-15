@@ -24,4 +24,5 @@ urlpatterns = patterns('',
     url(r'^graph/$', 'game.views.graph'),
     url(r'^genHands/$', 'game.views.genHands'),
     url(r'^addCards/$', 'game.views.addCards'),
+    url(r'^winCards/$', 'game.views.getWinIDs'),
 )
