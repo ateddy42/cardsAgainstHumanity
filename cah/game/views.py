@@ -44,7 +44,10 @@ def judge(request):
     judged = Judged.objects.filter(judgeID = request.user.id).filter(AIver = AIver).values_list('handID', flat=True)
     allHands = Hands.objects.filter(numPlayed = NUM_CARDS_PER_ROUND).exclude(id__in = judged)
     if len(allHands) == 0:
-        return HttpResponse("No played hands to choose from.")
+        if AIver == "6":
+            return HttpResponse("All done!!! </br><img src='http://fantasticbux.com/masoodzn/congrats_multi.gif'>")
+        else:
+            return HttpResponse("No played hands to choose from.")
     hand = allHands.order_by('?').first()
     black = BlackCards.objects.filter(id=hand.bid)
     playedWhites = Played.objects.filter(handID = hand.id).values_list('wID', flat=True)
