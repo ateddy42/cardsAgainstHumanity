@@ -149,14 +149,11 @@ def getWinIDs(request):
     winWhiteIDs.extend(playedWhites)
     return HttpResponse(str(winWhiteIDs))
 
-@login_required
 def graph(request):
-    can_judge = request.user.groups.filter(name='Judge')
-    if not can_judge:
-        return HttpResponse("You are not authorized to view this page.")
+    # can_judge = request.user.groups.filter(name='Judge')
+    # if not can_judge:
+    #     return HttpResponse("You are not authorized to view this page.")
     judges = Judged.objects.values('judgeID').distinct().values_list('judgeID', flat=True)
-
-    # Judged.objects.all().aggregate(Max('AIver'))['AIver__max']
     numVersions = Judged.objects.all().aggregate(Max('AIver'))['AIver__max']
 
     graphTitle = ['Judge']
