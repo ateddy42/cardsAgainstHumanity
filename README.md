@@ -1,11 +1,7 @@
 # Machines Against Cards Against Humanity
-#### CS 4701 Project
+#### Cornell CS 4701 Project
 ##### By Kaushik and Teddy
 
-### Updating Django Database on Website
+Our project is to create an optimal Cards Against Humanity player that will be able to choose a winning card in every round. The player will achieve this by tailoring his choice of card to the judge's (initially unknown) preferences, regardless of which judge is playing.
 
-* SSH into the website
-* cd to ~/public_html/cah/cardsAgainstHumanity
-* `git pull`
-* `python cah/manage.py syncdb --settings=cah.settings_web`
-* `python cah/manage.py collectstatic --settings=cah.settings_web`
+Results of project shown [here](http://cah.alphasigcornell.org/graph/).
