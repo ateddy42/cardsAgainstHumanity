@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=$$o!@3*(ldf)*vu@rs*v24#-qc8@83)%^6vpd@i8ywun%s6nt'
+SECRET_KEY = 'something-super-secret'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -27,9 +27,9 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
-ALLOWED_INCLUDE_ROOTS = ('/home/alphasi4/public_html/cah/cah',)
+ALLOWED_INCLUDE_ROOTS = ('',)
 
-TEMPLATE_DIRS = ("/home2/alphasi4/public_html/cahstatic/templates/", BASE_DIR+"/templates/",)
+TEMPLATE_DIRS = (BASE_DIR+"/templates/",)
 
 # Application definition
 
